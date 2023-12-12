@@ -1,46 +1,44 @@
 'use client'
 
 import React, {useState} from 'react';
+ 
+function Filling(number, multiple) {
+    let filling = number;
 
-
-function CorrectString(string) {
-    const correctSimbol = [['а','a'],['б','b'],['в','v'],['г','g'],['д','d'],['е','e'],['ё','yo'],['ж','zh'],['з','z'],['и','i'],[ 'й', 'j' ],[ 'к', 'k' ],[ 'л', 'l' ],[ 'м', 'm' ],[ 'н', 'n' ],[ 'о', 'o' ],[ 'п', 'p' ],[ 'р', 'r' ],[ 'с', 's' ],[ 'т', 't' ],[ 'у', 'u' ],[ 'ф', 'f' ],[ 'х', 'h' ],[ 'ц', 'c' ],[ 'ч', 'ch' ],[ 'ш', 'sh' ],[ 'щ', 'shch' ],[ 'ъ', '' ],[ 'ы', 'y' ],[ 'ь', '' ],[ 'э', 'e' ],[ 'ю', 'yu' ],[ 'я', 'ya' ]];
-
-    let correctString = string;
-    correctString = correctString.toLowerCase();
-    correctString = correctString.replaceAll(' ', '_');
-
-    for (let index = 0; index < correctSimbol.length; index++) {
-        correctString = correctString.replaceAll(correctSimbol[index][0], correctSimbol[index][1]);
+    while (filling.length % multiple != 0) {
+        filling += '0';
     }
 
-    return correctString;
+    return filling;
 } 
 
 function StringToBin(string) {
-    const symbolToNumber = [
-        ['0','0'],
-        ['0','0'],
-    ]
+    let result = [];
+    const encoder = new TextEncoder('utf-8')
 
-    let correctString = CorrectString(string);
+    encoder.encode(string).forEach(element => {
+        console.log(element.toString(2))
+        result.push(Filling(element.toString(2), 8))
+    }); 
 
-    console.log(correctString);
+    return result;
 }
 
 export default function QrCodeGen() {
     const [stringGen, setStringGen] = useState('');
 
     return (
-        <div className=''>
-            <div className='flex gap-4'>
+        <div className='w-[100%] flex justify-center align-middle flex-col'>
+            <div className='flex justify-center gap-4'>
                 <label className='text-white'>Поле для ввода данных для перевода в QrCode</label>
                 <input className='text-black' name="STRING_GEN" onChange={(e) => setStringGen(e.target.value)} value={stringGen}/>
             </div>
 
-            <div>
-                <span className='text-white'>
-                    { StringToBin(stringGen) }
+            <div className='flex flex-wrap'>
+                <span className='text-white flex flex-wrap'>
+                    { StringToBin(stringGen).map(element => {
+                        return element + ' ';
+                    }) }
                 </span>
             </div>
         </div>
